@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using IdentityApp.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    // adding role functionality for auth
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
@@ -23,6 +26,14 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.AllowedForNewUsers = true;
     options.User.RequireUniqueEmail = true;
+});
+
+// fallback policy
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
 });
 
 var app = builder.Build();
