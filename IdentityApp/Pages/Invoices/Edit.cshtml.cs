@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using IdentityApp;
 using IdentityApp.Data;
+using IdentityApp.Models;
 
 namespace IdentityApp.Pages.Invoices
 {
